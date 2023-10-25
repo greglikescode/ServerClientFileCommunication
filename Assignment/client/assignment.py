@@ -2,8 +2,12 @@ import sys
 import socket
 import os
 
+# CLIENT SENDS
+# INPUT: cli_sock,"sunglasses.png"
 def send_file(socket, filename):
-    # "rb" stands for "read in byte mode"
+    
+	# ASSUMING file is in directory, open it
+	# ASIDE "rb" stands for "read in byte mode"
 	file = open(filename,"rb")
 	file_size = os.path.getsize(filename)
 	
@@ -15,7 +19,9 @@ def send_file(socket, filename):
 	# b stands for bytes, so sending bytes of end to signify end of send
 	socket.send(b"<END>")
 	file.close()
-    
+
+# SERVER RECIEVES
+# cli_sock, "sunglasses.png"  
 def recv_file(socket, filename):
 	filename = socket.recv(1024).decode()
 	print(filename)
