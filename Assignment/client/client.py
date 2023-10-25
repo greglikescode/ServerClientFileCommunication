@@ -1,10 +1,11 @@
 import sys
 import socket
 
+sys.path.append("..")
 from assignment import send_file, recv_file, send_listing, recv_listing
 
 # Commands
-commands = ["put","get","list"]
+commands = ["put","get","list","exit"]
 # Create the socket with which we will connect to the server
 # It will be an internet socket that will be a TCP socket
 cli_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -28,26 +29,26 @@ except Exception as e:
 	exit(1)
 
 try:
-	# "put"
-	#command = str(sys.argv[3])
+	command = str(sys.argv[3])
 	filename = str(sys.argv[4])
 
+	if command not in commands:
+		print("Error, command not in list of commands")
+		exit(1)
+
 	# Sending the filename and command to server...
-	#cli_sock.send(command.encode())
+	cli_sock.send(command.encode())
 
-	# if command not in commands:
-	# 	print("Error, command not in list of commands")
-	# 	exit(1)
-
-	#if command == "put":
-	print("CLIENT IS GOING TO ATTEMPT TO SEND "+filename+" THROUGH THE SOCKET "+str(cli_sock))
-	send_file(cli_sock,filename)
-		
-	# elif command == "get":
-	# 	print("this is where stuff for get will go")
-		
-	# elif command == "list":
-	# 	print("this is where stuff for get will go")
+	if command == "put":
+		print("CLIENT IS GOING TO ATTEMPT TO SEND "+filename+" THROUGH THE SOCKET "+str(cli_sock))
+		send_file(cli_sock,filename)
+	elif command == "get":
+		while file_received != True:
+			print("Waiting for server to send the file")
+	elif command == "list":
+		print("Some more stuff will go here")
+	elif command == "exit":
+		print("Somehow exit the code")
 		
 
 finally:

@@ -1,6 +1,7 @@
 import sys
 import socket
 
+sys.path.append("..")
 from assignment import send_file, recv_file, send_listing, recv_listing
 
 # Create the socket on which the server will receive new connections
@@ -15,46 +16,42 @@ except Exception as e:
 	print(e)
 	exit(1)
 
+i = 0
 # Loop forever (or at least for as long as no fatal errors occur)
 while True:
+	print(i)
 	# ESTABLISHING THE CONNECTION
 	try:
 		print("Waiting for new client... ")
 		cli_sock, cli_addr = srv_sock.accept()
 		cli_addr_str = str(cli_addr)
 		print("Client " + cli_addr_str + " connected.")
-	except Exception as e:
-		print(e)
-		exit(1)
-
-	while True:
-		try:
-			#command = cli_sock.recv(1024).decode()
-			
-			#if command == "put":
-				#recv_file(cli_sock,filename)
-			filename = cli_sock.recv(1024).decode()
-			print(filename)
-			file_size = cli_sock.recv(1024).decode()
-			print(file_size)
-			
-			file = open(filename,"wb")
-
-			file_bytes = b""
-			done = False
-			while not done:
-				data = cli_sock.recv(1024)
-				if file_bytes[-5:] == b"<END>":
-					done = True
-				else:
-					file_bytes += data
-				
-			file.write(file_bytes)
-			file.close()
 		
-		finally:
-			
+		command = cli_sock.recv(1024).decode()
+		filename = cli_sock.recv(1024).decode()
+		file_size = cli_sock.recv(1024).decode()
+		print("The file name is: "+filename)
+		print("The file size is: "+file_size)
+		print("The file command is: "+command)
+
+		if command == "put":
+			print("Calling recv_file!!! Passing in filename")
+			recv_file(cli_sock,filename)
+		elif command == "get":
+			print("Calling send_file!!! Passing in filename")
+			send_file(cli_sock,filename)
+		elif command == "list":
+			print("Some more stuff will go here")
+		elif command == "exit":
 			cli_sock.close()
+			srv_sock.close()
+			exit(0)
+		
+	finally:
+		print("I am in the finally")
+			
+		cli_sock.close()
+		i+=1
 
 # Close the server socket as well to release its resources back to the OS
 srv_sock.close()
