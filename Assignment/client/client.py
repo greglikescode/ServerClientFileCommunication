@@ -1,27 +1,9 @@
 import sys
+import os
 import socket
 
 sys.path.append("..")
-from assignment import send_file, recv_file, send_listing, recv_listing
-
-# Commands
-commands = ["put","get","list","exit"]
-try:
-	command = str(sys.argv[3])
-except Exception as e:
-	print(e)
-	print("No command was input. Exitting...")
-	exit(1)
-
-if command not in commands:
-	print("Error, command not in list of commands")
-	exit(1)
-
-try:
-	filename = str(sys.argv[4])
-except Exception as e:
-	print(e)
-	print("No filename was input, continuing...")
+from assignment import send_file, recv_file, recv_listing
 
 cli_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -29,47 +11,78 @@ cli_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # python client.py localhost 1069 put sunglasses.png 
 srv_addr = (sys.argv[1], int(sys.argv[2]))
 srv_addr_str = str(srv_addr)
+port_str = str(int(sys.argv[2]))
+
+# Commands
+commands = ["put","get","list","exit"]
+
+try:
+	command = str(sys.argv[3])
+except Exception as e:
+	print(srv_addr_str,port_str,"FAILURE REPORT: you must input a command after port number.",e," Exitting code...")
+	exit(1)
+
+if command not in commands:
+	print(srv_addr_str,port_str,"FAILURE REPORT:",command,"is an invalid command.",e," Exitting code...")
+	exit(1)
+
+try:
+	filename = str(sys.argv[4])
+except Exception as e:
+	pass # No filename is necessary for list and exit
 
 # ESTABLISHING THE CONNECTION
 try:
 	print("Connecting to " + srv_addr_str + "... ")
 	cli_sock.connect(srv_addr)
-	print("Connected.")
+	print("IP address:",srv_addr_str,"port number:",port_str,"client now connected to server")
 
-	# Sending the filename and command to server...
-
-	# If no filename was input...
 	try:
 		datasend = f"{command}\n{filename}"
 		cli_sock.sendall(datasend.encode())
+	# If no filename was input...
 	except:
 		cli_sock.sendall(command.encode())	
 	
 except Exception as e:
-	print(e)
+	print(srv_addr_str,port_str,"FAILURE REPORT: could not connect to server at",srv_addr_str,port_str,". Exitting code...")
 	exit(1)
 
 try:
+	current_directory = os.listdir()
 	# CLIENT UPLOAD
 	if command == "put":
-		print("COMMAND ENTERED IS put")
-		print("CLIENT IS GOING TO ATTEMPT TO SEND "+filename+" THROUGH THE SOCKET "+str(cli_sock))
-		send_file(cli_sock,filename)
+		if filename in current_directory:
+			try:
+				send_file(cli_sock,filename)
+				print(srv_addr_str,port_str,"SUCCESS REPORT: "+filename+" was successfully sent to the server.")
+			except Exception as e:
+				print(srv_addr_str,port_str,"FAILURE REPORT: failed to send "+filename+".",e)
+		else:
+			print(srv_addr_str,port_str,"FAILURE REPORT: "+filename+" could not be found in client directory")
+				
 
 	# CLIENT DOWNLOAD
 	elif command == "get":
-		print("COMMAND ENTERED IS get")
-		print("CLIENT IS GOING TO ATTEMPT TO RECIEVE "+filename+" THROUGH THE SOCKET "+str(cli_sock))
-		recv_file(cli_sock,filename)
+
+		if filename not in current_directory:
+			try:
+				recv_file(cli_sock,filename)
+				print(srv_addr_str,port_str,"SUCCESS REPORT: "+filename+" was successfully downloaded from the server.")
+			except Exception as e:
+				print(srv_addr_str,port_str,"FAILURE REPORT: failed to recieve "+filename+".",e)
+		else:
+			print(srv_addr_str,port_str,"FAILURE REPORT: overwriting is not permitted.")
+			exit(1)
 
 	# LIST
 	elif command == "list":
-		print("Some more stuff will go here")
 		recv_listing(cli_sock)
+		print(srv_addr_str,port_str,"SUCCESS REPORT: server directory was recieved.")
 
 	# EXIT
 	elif command == "exit":
-		print("Exitting...")
+		print(srv_addr_str,port_str,"SUCCESS REPORT: exitting code...")
 		exit(0)	
 
 finally:
