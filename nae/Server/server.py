@@ -31,7 +31,7 @@ while True:
             except Exception as e:
                 print("Error receiving file:", e)
         elif cmd == "get":
-            
+            pass
         else:
             print("Invalid command:", cmd)
 
