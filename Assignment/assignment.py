@@ -55,7 +55,28 @@ def recv_file(socket, filename):
 	file.close()
       
 def send_listing(socket):
-      print("hello")
+	print("hello, I am send_listing() !!!!")
+	library = os.listdir() # library is a type list
+	print("This is the library: "+str(library))
+	try:
+		# Sending library as a bunch of strings
+		lib_string = ""
+		for elt in library:
+			lib_string = lib_string + elt + "\n"
+		# Chopping of \n character at end of lib_string
+		lib_string = lib_string[:-1]
+		print("Sending this: "+lib_string)
+		socket.send(lib_string.encode())
+		print("Finished sending!!!")
+	except Exception as e:
+		print("Library could not send",e)
       
 def recv_listing(socket):
-      print("hello")
+	print("hello, I am recv_listing() !!!")
+
+	try:
+		data_recieved = socket.recv(1024).decode()
+		data_recieved.split("\n")
+		print("Library recieved: \n"+data_recieved)
+	except Exception as e:
+		print("Library recieve failure",e)

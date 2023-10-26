@@ -37,8 +37,13 @@ try:
 	print("Connected.")
 
 	# Sending the filename and command to server...
-	datasend = f"{command}\n{filename}"
-	cli_sock.sendall(datasend.encode())
+
+	# If no filename was input...
+	try:
+		datasend = f"{command}\n{filename}"
+		cli_sock.sendall(datasend.encode())
+	except:
+		cli_sock.sendall(command.encode())	
 	
 except Exception as e:
 	print(e)
@@ -60,6 +65,7 @@ try:
 	# LIST
 	elif command == "list":
 		print("Some more stuff will go here")
+		recv_listing(cli_sock)
 
 	# EXIT
 	elif command == "exit":

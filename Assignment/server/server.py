@@ -26,8 +26,11 @@ while True:
 
 		# May need to increase buffer size!!!
 		data_recieved = cli_sock.recv(1024).decode()
-		command, filename = data_recieved.split("\n")
-		print("Command: "+command+"\nFilename: "+filename)
+		try:
+			command, filename = data_recieved.split("\n")
+			print("Command: "+command+"\nFilename: "+filename)
+		except:
+			command = data_recieved
 
 		# SERVER DOWNLOAD
 		if command == "put":
@@ -48,6 +51,7 @@ while True:
 
 		elif command == "list":
 			print("Some more stuff will go here")
+			send_listing(cli_sock)
 
 		elif command == "exit":
 			print("Exitting code...")
