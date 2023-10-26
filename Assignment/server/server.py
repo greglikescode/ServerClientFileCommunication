@@ -34,18 +34,28 @@ while True:
 		print("The file size is: "+file_size)
 		print("The file command is: "+command)
 
+		# SERVER DOWNLOAD
 		if command == "put":
 			print("Calling recv_file!!! Passing in filename")
 			recv_file(cli_sock,filename)
+
+		# SERVER UPLOAD
 		elif command == "get":
 			print("Calling send_file!!! Passing in filename")
 			send_file(cli_sock,filename)
+			serverSent = cli_sock.send(True.encode())
+
+
 		elif command == "list":
 			print("Some more stuff will go here")
+
 		elif command == "exit":
 			cli_sock.close()
 			srv_sock.close()
 			exit(0)
+
+		else:
+			print("Invalid command name")
 		
 	finally:
 		print("I am in the finally")

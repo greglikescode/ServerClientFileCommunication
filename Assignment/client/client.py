@@ -29,22 +29,36 @@ except Exception as e:
 	exit(1)
 
 try:
-	command = str(sys.argv[3])
-	filename = str(sys.argv[4])
+	try:
+		command = str(sys.argv[3])
+		filename = str(sys.argv[4])
+	except Exception as e:
+		print(e)
+		print("command or filename were not defined")
 
 	if command not in commands:
 		print("Error, command not in list of commands")
 		exit(1)
 
 	# Sending the filename and command to server...
-	cli_sock.send(command.encode())
+	try:
+		cli_sock.send(command.encode())
+		cli_sock.send(filename.encode())
+	except Exception as e:
+		print("empty things were sent")
 
+	# CLIENT UPLOAD
 	if command == "put":
+		print("COMMAND ENTERED IS put")
 		print("CLIENT IS GOING TO ATTEMPT TO SEND "+filename+" THROUGH THE SOCKET "+str(cli_sock))
 		send_file(cli_sock,filename)
+
+	# CLIENT DOWNLOAD
 	elif command == "get":
-		while file_received != True:
-			print("Waiting for server to send the file")
+		print("COMMAND ENTERED IS get")
+		recv_file(cli_sock,filename)
+
+		
 	elif command == "list":
 		print("Some more stuff will go here")
 	elif command == "exit":
