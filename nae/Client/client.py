@@ -31,7 +31,7 @@ try:
     if command == "put":
         send_file(cli_sock, file_name)
     elif command == "get":
-        print("this is where stuff for get will go")
+        recv_file(cli_sock,file_name)
     elif command == "list":
         print("this is where stuff for list will go")
 finally:

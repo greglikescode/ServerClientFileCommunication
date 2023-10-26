@@ -1,6 +1,6 @@
 import sys
 import socket
-from ae1 import *
+from ae1 import * # ae1 holds all of our functions
 
 srv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host_name = "0.0.0.0"
@@ -31,7 +31,10 @@ while True:
             except Exception as e:
                 print("Error receiving file:", e)
         elif cmd == "get":
-            pass
+            try:
+                send_file(cli_sock,file_name)
+            except Exception as e:
+                print("Error sending file:"+e)
         else:
             print("Invalid command:", cmd)
 
