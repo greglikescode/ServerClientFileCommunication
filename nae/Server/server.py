@@ -1,5 +1,7 @@
 import sys
 import socket
+import datetime 
+
 from ae1 import * # ae1 holds all of our functions
 
 srv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
