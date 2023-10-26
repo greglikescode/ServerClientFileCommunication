@@ -50,7 +50,25 @@ def recv_file(socket, filename):
 
       
 def send_listing(socket):
-      print("hello")
+    try:
+          file_list = os.listdir() # get list of files in current directory
+          file_list_str = "\n".join(file_list)
+          socket.sendall(file_list_str.encode())
+          socket.sendall(b"<END>") # send end marker
+          print ("File list sent.")
+    except Exception as e:
+            print("Error sending file list: ",e)
+
       
 def recv_listing(socket):
-      print("hello")
+    try:
+        file_list = ""
+        while True:
+            data = socket.recv(1024).decode()
+            if data[-5:] == "<END>":
+                file_list += data[:-5]
+                break
+            file_list += data
+        print ("received file list from server \n"+file_list)
+    except Exception as e:
+        print("Error receving file list:",e)
