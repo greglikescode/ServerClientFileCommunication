@@ -39,10 +39,10 @@ try:
 
 	try:
 		datasend = f"{command}\n{filename}"
-		cli_sock.sendall(datasend.encode())
+		cli_sock.send(datasend.encode())
 	# If no filename was input...
 	except:
-		cli_sock.sendall(command.encode())	
+		cli_sock.send(command.encode())	
 	
 except Exception as e:
 	print(srv_addr_str,port_str,"FAILURE REPORT: could not connect to server at",srv_addr_str,port_str,". Exitting code...")

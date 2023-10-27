@@ -19,8 +19,7 @@ except Exception as e:
 i = 0
 # Loop forever until error.
 while True:
-	print("\n")
-	print("TRANSFER",i)
+	print("\nTRANSFER",i)
 	# ESTABLISHING THE CONNECTION
 	try:
 		print("Waiting for new client to connect... ")
@@ -29,7 +28,6 @@ while True:
 		cli_port_str = str(int(sys.argv[1]))
 		print("IP address:",cli_addr_str,"port number:",cli_port_str,"server up and running")
 
-		# May need to increase buffer size!!!
 		data_recieved = cli_sock.recv(1024).decode()
 		try:
 			command, filename = data_recieved.split("\n")
