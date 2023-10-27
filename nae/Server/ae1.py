@@ -22,7 +22,7 @@ def send_file(socket, filename):
 
             # Send the end marker
             socket.sendall(b"<END>")
-            print("File", filename, "successfully sent.")
+            print("SUCCESS")
     except Exception as e:
         print("Error sending file:", e)
 
@@ -44,7 +44,7 @@ def recv_file(socket, filename):
                 if data[-5:] == b"<END>":
                     break
 
-        print("File", filename, "successfully received.")
+        print("SUCCESS")
     except Exception as e:
         print("Error receiving file:", e)
 
@@ -55,7 +55,7 @@ def send_listing(socket):
           file_list_str = "\n".join(file_list)
           socket.sendall(file_list_str.encode())
           socket.sendall(b"<END>") # send end marker
-          print ("File list sent.")
+          print ("SUCCESS")
     except Exception as e:
             print("Error sending file list: ",e)
 
@@ -69,6 +69,6 @@ def recv_listing(socket):
                 file_list += data[:-5]
                 break
             file_list += data
-        print ("received file list from server \n"+file_list)
+        print ("Received file list from server \n"+file_list)
     except Exception as e:
         print("Error receving file list:",e)

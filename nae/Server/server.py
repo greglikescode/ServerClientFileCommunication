@@ -6,20 +6,19 @@ from ae1 import *  # ae1 holds all of our functions
 srv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host_name = "0.0.0.0"
 
-try:
+try: # this initialises our server
     srv_sock.bind((host_name, int(sys.argv[1])))
     srv_sock.listen()
-    print("Server listening on port", sys.argv[1])
 except Exception as e:
     print("Error:", e)
     exit(1)
 
-while True:
+while True: # keep running listening for connections forever (until we close the program)
     try:
-        print("Waiting for new client")
+        report = ""
         cli_sock, cli_addr = srv_sock.accept()
         cli_addr_str = str(cli_addr)
-        print("Client " + cli_addr_str + " connected.")
+        report = "Client: " + cli_addr_str + ", "
 
         data_received = cli_sock.recv(2048).decode()  # Increase the buffer size if needed
         
@@ -29,9 +28,8 @@ while True:
             cmd = data_received.strip()
             file_name = None
 
-        print("Filename:", file_name)
-        print("Received command:", cmd)
-
+        report += "Filename: "+file_name+", Command: "+cmd+", "
+        print (report,end="")
         if cmd == "put" and file_name:
             try:
                 recv_file(cli_sock, file_name)
@@ -45,7 +43,6 @@ while True:
         elif cmd == "list":
             try:
                 send_listing(cli_sock)
-                print("File list sent to the client.")
             except Exception as e:
                 print("Error sending file list:", e)
         else:

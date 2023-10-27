@@ -17,9 +17,9 @@ cli_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 srv_addr = (sys.argv[1], int(sys.argv[2]))
 
 try:
-    print("Connecting to " + str(srv_addr) + "...")
+    report = ""
     cli_sock.connect(srv_addr)
-    print("Connected.")
+    report += "Server: "+str(srv_addr)+", Command: "+command+", File Name: "+file_name+", "
 
     if file_name:
         data_to_send = f"{file_name}\n{command}"
@@ -33,10 +33,18 @@ except Exception as e:
     exit(1)
 
 try:
+    currentDir = os.listdir()
+    print (report,end="")
     if command == "put":
-        send_file(cli_sock, file_name)
+        if file_name not in currentDir:
+            send_file(cli_sock, file_name)
+        else:
+            print("FAILURE. Filename could not be found in client directory.")
     elif command == "get":
-        recv_file(cli_sock, file_name)
+        if file_name not in currentDir:
+            recv_file(cli_sock, file_name)
+        else:
+            print("FAILURE. Overwriting files is not permitted.")
     elif command == "list":
         try:
             recv_listing(cli_sock)
