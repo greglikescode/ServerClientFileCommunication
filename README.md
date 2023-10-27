@@ -1,4 +1,4 @@
-# Nostrils
+# ServerClientFileCommunication
 yucky boogies
 
 Adam,Greg Ollie and Callums cheeky little NOSE2 project
