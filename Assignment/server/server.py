@@ -19,6 +19,7 @@ except Exception as e:
 i = 0
 # Loop forever until error.
 while True:
+	print("\n")
 	print("TRANSFER",i)
 	# ESTABLISHING THE CONNECTION
 	try:
@@ -42,10 +43,12 @@ while True:
 
 			if filename not in current_directory:
 				try:
-					recv_file(cli_sock,filename)
-					print(cli_addr_str,cli_port_str,"SUCCESS REPORT: "+filename+" was successfully downloaded from the client.")
+					if recv_file(cli_sock,filename):
+						print(cli_addr_str,cli_port_str,"SUCCESS REPORT: "+filename+" was successfully downloaded from the client.")
+					else:
+						print(cli_addr_str,cli_port_str,"FAILURE REPORT: could not recieve",filename+" from the client.")
 				except Exception as e:
-					print(cli_addr_str,cli_port_str,"FAILURE REPORT: could not recieve",filename+".",e)
+					print(cli_addr_str,cli_port_str,"FAILURE REPORT: could not recieve",filename+". from the client",e)
 			else:
 				print(cli_addr_str,cli_port_str,"FAILURE REPORT: overwriting is not permitted.")
 
@@ -54,10 +57,12 @@ while True:
 
 			if filename in current_directory:
 				try:
-					send_file(cli_sock,filename)
-					print(cli_addr_str,cli_port_str,"SUCCESS REPORT: "+filename+" was successfully sent to the client.")
+					if send_file(cli_sock,filename):
+						print(cli_addr_str,cli_port_str,"SUCCESS REPORT: "+filename+" was successfully sent to the client.")
+					else:
+						print(cli_addr_str,cli_port_str,"FAILURE REPORT: could not send file "+filename+" to the client.")
 				except Exception as e:
-					print(cli_addr_str,cli_port_str,"FAILURE REPORT: could not send file "+filename+" to the client.",e,"Exitting code...")
+					print(cli_addr_str,cli_port_str,"FAILURE REPORT: could not send file "+filename+" to the client.",e)
 			else:
 				print(cli_addr_str,cli_port_str,"FAILURE REPORT: "+filename+" could not be found in server directory")
 

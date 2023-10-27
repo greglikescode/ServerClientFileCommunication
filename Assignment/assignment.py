@@ -13,8 +13,9 @@ def send_file(socket, filename):
 		socket.sendall(data) # NOTE no need to encode since already in bytes
 		socket.send(b"<END>")
 		file.close()
-	except Exception as e:
-		pass
+		return True
+	except:
+		return False
 
 # DOWNLOAD
 def recv_file(socket, filename):
@@ -30,8 +31,9 @@ def recv_file(socket, filename):
 				file_bytes += data
 		file.write(file_bytes)
 		file.close()
-	except Exception as e:
-		pass
+		return True
+	except:
+		return False
       
 def send_listing(socket):
 	library = os.listdir() # library is a type list

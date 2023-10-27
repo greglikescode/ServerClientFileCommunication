@@ -54,8 +54,10 @@ try:
 	if command == "put":
 		if filename in current_directory:
 			try:
-				send_file(cli_sock,filename)
-				print(srv_addr_str,port_str,"SUCCESS REPORT: "+filename+" was successfully sent to the server.")
+				if send_file(cli_sock,filename):
+					print(srv_addr_str,port_str,"SUCCESS REPORT: "+filename+" was successfully sent to the server.")
+				else:
+					print(srv_addr_str,port_str,"FAILURE REPORT: failed to send "+filename+".")
 			except Exception as e:
 				print(srv_addr_str,port_str,"FAILURE REPORT: failed to send "+filename+".",e)
 		else:
@@ -67,8 +69,10 @@ try:
 
 		if filename not in current_directory:
 			try:
-				recv_file(cli_sock,filename)
-				print(srv_addr_str,port_str,"SUCCESS REPORT: "+filename+" was successfully downloaded from the server.")
+				if recv_file(cli_sock,filename):
+					print(srv_addr_str,port_str,"SUCCESS REPORT: "+filename+" was successfully downloaded from the server.")
+				else:
+					print(srv_addr_str,port_str,"FAILURE REPORT: failed to recieve "+filename+".")
 			except Exception as e:
 				print(srv_addr_str,port_str,"FAILURE REPORT: failed to recieve "+filename+".",e)
 		else:
